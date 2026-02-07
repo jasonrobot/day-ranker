@@ -1,9 +1,15 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, signal } from "@angular/core";
+import { Day } from "./day/day";
+import { RouterOutlet } from "@angular/router";
+import { Month } from "./month/month";
+import { Calendar } from "./calendar/calendar";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+    Calendar
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

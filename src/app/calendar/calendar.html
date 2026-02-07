@@ -1,1 +1,8 @@
-<p>calendar works!</p>
+<div class="calendar-container">
+  <h2>Year: {{ currentYear }}</h2>
+  <div class="months-list">
+    @for (month of months; track month; let i = $index) {
+      <app-month [monthName]="month" [monthIndex]="i" [year]="currentYear"></app-month>
+    }
+  </div>
+</div>

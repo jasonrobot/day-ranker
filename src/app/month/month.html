@@ -1,1 +1,8 @@
-<p>month works!</p>
+<div class="month-container">
+  <h3>{{ monthName() }} {{ year() }}</h3>
+  <div class="days-list">
+    @for (day of daysArray(); track day) {
+      <app-day [score]="0" [comment]="''" [dayNumber]="day"></app-day>
+    }
+  </div>
+</div>

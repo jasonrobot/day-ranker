@@ -1,1 +1,18 @@
-<p>day works!</p>
+<div class="day-number">Day {{ dayNumber() }}</div>
+<div class="day-container">
+  <label>
+    Score (-3 to +3):
+    <input type="number"
+           [value]="score()"
+           (input)="scoreChange.emit(toNumber($event.target.value))"
+           min="-3"
+           max="3" />
+  </label>
+  <br />
+  <label>
+    Comment:
+    <input type="text"
+           [value]="comment()"
+           (input)="commentChange.emit($event.target.value)" />
+  </label>
+</div>
