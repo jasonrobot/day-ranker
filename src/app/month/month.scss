@@ -1,0 +1,50 @@
+.month-container {
+  margin-bottom: 2em;
+}
+
+.calendar-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 1000px; /* Set fixed width for the calendar */
+  box-sizing: border-box;
+}
+
+.calendar-header {
+  display: flex;
+}
+
+.calendar-day-label {
+  width: 134px; /* 1000px / 7 ≈ 142px, minus gap/margin */
+  height: 28px;
+  text-align: center;
+  font-weight: bold;
+  color: #444;
+  background: #f0f0f0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 4px 4px 0 0;
+  margin-right: 2px;
+  box-sizing: border-box;
+}
+
+.calendar-week {
+  display: flex;
+}
+
+.calendar-day-cell {
+  width: 134px;
+  height: 134px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  box-sizing: border-box;
+}
+
+.calendar-day-empty {
+  width: 134px;
+  height: 134px;
+  background: transparent;
+  box-sizing: border-box;
+}

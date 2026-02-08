@@ -1,18 +1,17 @@
-<div class="day-number">Day {{ dayNumber() }}</div>
-<div class="day-container">
+<div class="day-container {{ scoreClass() }}">
+  <div class="day-number">{{ dayNumber() }}</div>
   <label>
     Score (-3 to +3):
     <input type="number"
-           [value]="score()"
-           (input)="scoreChange.emit(toNumber($event.target.value))"
+           [value]="dayState().score"
+           (input)="setScore($event)"
            min="-3"
            max="3" />
   </label>
-  <br />
   <label>
     Comment:
     <input type="text"
-           [value]="comment()"
-           (input)="commentChange.emit($event.target.value)" />
+           [value]="dayState().comment"
+           (input)="setComment($event)" />
   </label>
 </div>

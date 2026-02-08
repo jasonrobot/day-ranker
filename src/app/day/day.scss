@@ -1,0 +1,57 @@
+.day-container {
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 6px;
+  box-sizing: border-box;
+  margin: 0;
+  gap: 4px;
+}
+
+.day-number {
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 1.1em;
+  text-align: left;
+}
+
+.day-container label {
+  font-size: 0.95em;
+  margin-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.day-container input[type="number"],
+.day-container input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.95em;
+  margin-top: 2px;
+}
+
+.score-plus1 {
+  background: #b6fcb6 !important; /* green */
+}
+.score-plus2 {
+  background: #7fffd4 !important; /* teal (aquamarine) */
+}
+.score-plus3 {
+  background: #b6d4fc !important; /* blue (light blue) */
+}
+.score-minus1 {
+  background: #fff9b6 !important; /* yellow */
+}
+.score-minus2 {
+  background: #ffd59e !important; /* orange */
+}
+.score-minus3 {
+  background: #ffb6b6 !important; /* red (light red) */
+}

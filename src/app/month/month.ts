@@ -12,15 +12,30 @@ export class Month {
   monthIndex = input<number>(0); // 0-based (0 = January)
   year = input<number>(new Date().getFullYear());
 
-  // Compute the number of days in the month
   daysInMonth = computed(() => {
     const month = this.monthIndex();
     const year = this.year();
     return new Date(year, month + 1, 0).getDate();
   });
 
-  // Create an array of day numbers [1, 2, ..., daysInMonth]
+  startDayOfWeek = computed(() => {
+    // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    return new Date(this.year(), this.monthIndex(), 1).getDay();
+  });
+
   daysArray = computed(() =>
     Array.from({ length: this.daysInMonth() }, (_, i) => i + 1)
   );
+
+  // Build weeks: each week is an array of 7, with empty slots as null
+  weeks = computed(() => {
+    const days = this.daysArray();
+    const startPad = Array(this.startDayOfWeek()).fill(null);
+    const allDays = [...startPad, ...days];
+    const weeks = [];
+    for (let i = 0; i < allDays.length; i += 7) {
+      weeks.push(allDays.slice(i, i + 7));
+    }
+    return weeks;
+  });
 }
