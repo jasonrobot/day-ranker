@@ -1,9 +1,14 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Day } from '../day/day';
+import { CalendarStore } from '../calendar/calendar.store';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-month',
-  imports: [Day],
+  imports: [
+    CommonModule,
+    Day,
+  ],
   templateUrl: './month.html',
   styleUrls: ['./month.scss']
 })
@@ -11,6 +16,10 @@ export class Month {
   monthName = input<string>('');
   monthIndex = input<number>(0); // 0-based (0 = January)
   year = input<number>(new Date().getFullYear());
+
+  calendarStore = inject(CalendarStore);
+
+  monthStats = computed(() => this.calendarStore.monthStats()[this.monthIndex()]);
 
   daysInMonth = computed(() => {
     const month = this.monthIndex();

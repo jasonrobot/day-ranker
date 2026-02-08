@@ -1,5 +1,5 @@
 import { computed } from '@angular/core';
-import { signalStore, withMethods, withState, patchState } from '@ngrx/signals';
+import { signalStore, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
 import { DayState, Score, YearState } from '../models/app.model';
 
 function getDaysInMonth(year: number, monthIndex: number): number {
@@ -14,6 +14,15 @@ export const CalendarStore = signalStore(
         () => ({ score: 0 as Score, comment: '' })
       ),
     })),
+  })),
+  withComputed(({ months }) => ({
+    monthStats: computed(() =>
+      months().map(month => {
+        const total = month.days.reduce((sum, day) => sum + day.score, 0);
+        const average = month.days.length > 0 ? total / month.days.length : 0;
+        return { total, average };
+      })
+    )
   })),
   withMethods(store => ({
     updateDay(monthIdx: number, dayIdx: number, update: Partial<DayState>) {

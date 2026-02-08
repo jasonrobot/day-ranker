@@ -1,6 +1,12 @@
 <!-- month/month.html -->
 <div class="month-container">
-  <h3>{{ monthName() }} {{ year() }}</h3>
+  <div class="month-header">
+    <h3>{{ monthName() }} {{ year() }}</h3>
+    <div class="month-stats">
+      <span>Total: {{ monthStats().total }}</span>
+      <span>Average: {{ monthStats().average | number:'1.2-2' }}</span>
+    </div>
+  </div>
   <div class="calendar-grid">
     <div class="calendar-header">
       <div class="calendar-day-label">Sun</div>
