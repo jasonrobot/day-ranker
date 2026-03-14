@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Month } from './month';
+import { CalendarStore } from '../calendar/calendar.store';
 
 describe('Month', () => {
   let component: Month;
@@ -8,7 +9,8 @@ describe('Month', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Month]
+      imports: [Month],
+      providers: [CalendarStore]
     })
     .compileComponents();
 
