@@ -17,11 +17,11 @@
       <div class="calendar-day-label">Fri</div>
       <div class="calendar-day-label">Sat</div>
     </div>
-    @for (week of weeks(); track week) {
+    @for (week of weeks(); track week[0]) {
       <div class="calendar-week">
         @for (day of week; track day) {
           <div class="calendar-day-cell">
-            @if (day !== null) {
+            @if (day > 0) {
               <app-day
                 [dayNumber]="day"
                 [monthIndex]="monthIndex()"

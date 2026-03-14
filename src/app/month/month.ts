@@ -3,6 +3,14 @@ import { Day } from '../day/day';
 import { CalendarStore } from '../calendar/calendar.store';
 import { CommonModule } from '@angular/common';
 
+function* emptyDay() {
+  let val = -1;
+  while (true) {
+    yield val;
+    val -= 1;
+  }
+}
+
 @Component({
   selector: 'app-month',
   imports: [
@@ -39,9 +47,10 @@ export class Month {
   // Build weeks: each week is an array of 7, with empty slots as null
   weeks = computed(() => {
     const days = this.daysArray();
-    const startPad = Array(this.startDayOfWeek()).fill(null);
-    const allDays = [...startPad, ...days];
-    const weeks = [];
+    // const startPad = Array(this.startDayOfWeek()).fill();
+    const startPad = emptyDay().take(this.startDayOfWeek());
+    const allDays: number[] = [...startPad, ...days];
+    const weeks: number[][] = [];
     for (let i = 0; i < allDays.length; i += 7) {
       weeks.push(allDays.slice(i, i + 7));
     }
