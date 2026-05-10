@@ -1,0 +1,8 @@
+<div class="login-container">
+  <h1>Day Ranker</h1>
+  <p>Track your days, one score at a time.</p>
+  <button class="sign-in-btn" (click)="signIn()">Sign in with Google</button>
+  @if (authService.signInError()) {
+    <p class="error">{{ authService.signInError() }}</p>
+  }
+</div>
