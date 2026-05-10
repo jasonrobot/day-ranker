@@ -1,18 +1,20 @@
-import { Component, signal } from "@angular/core";
-import { Day } from "./day/day";
-import { RouterOutlet } from "@angular/router";
-import { Month } from "./month/month";
-import { Calendar } from "./calendar/calendar";
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Calendar } from './calendar/calendar';
+import { Login } from './login/login';
+import { AuthService } from './services/auth.service';
+import { SyncService } from './services/sync.service';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    Calendar
-  ],
+  imports: [RouterOutlet, Calendar, Login],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
-  protected readonly title = signal('day-ranker');
+  protected readonly authService = inject(AuthService);
+
+  constructor() {
+    inject(SyncService);
+  }
 }

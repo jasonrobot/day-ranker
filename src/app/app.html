@@ -1,1 +1,5 @@
-<app-calendar></app-calendar>
+@if (authService.user()) {
+  <app-calendar />
+} @else {
+  <app-login />
+}
