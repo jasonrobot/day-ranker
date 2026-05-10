@@ -43,3 +43,6 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 /.agent-shell/
+
+# Firebase secrets — keep locally, never commit
+src/environments/environment.prod.ts
