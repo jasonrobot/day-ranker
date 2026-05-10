@@ -1,18 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { Day } from './day';
 import { CalendarStore } from '../calendar/calendar.store';
+import { StorageService } from '../services/storage.service';
 
 describe('Day', () => {
   let component: Day;
   let fixture: ComponentFixture<Day>;
 
+  const mockStorageService = {
+    loadYear: vi.fn().mockResolvedValue(null),
+    saveYear: vi.fn().mockResolvedValue(undefined),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Day],
-      providers: [CalendarStore]
-    })
-    .compileComponents();
+      providers: [
+        CalendarStore,
+        { provide: StorageService, useValue: mockStorageService },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Day);
     component = fixture.componentInstance;
@@ -30,9 +38,8 @@ describe('Day', () => {
   });
 
   it('should have dayState with default score of 0', () => {
-    const dayState = component.dayState();
-    expect(dayState.score).toBe(0);
-    expect(dayState.comment).toBe('');
+    expect(component.dayState().score).toBe(0);
+    expect(component.dayState().comment).toBe('');
   });
 
   it('should return correct scoreClass for score 0', () => {
@@ -62,20 +69,17 @@ describe('Day', () => {
   });
 
   it('should update day score via setScore', () => {
-    const mockEvent = { target: { value: '2' } };
-    component.setScore(mockEvent);
+    component.setScore({ target: { value: '2' } });
     expect(component.dayState().score).toBe(2);
   });
 
   it('should update day comment via setComment', () => {
-    const mockEvent = { target: { value: 'Test comment' } };
-    component.setComment(mockEvent);
+    component.setComment({ target: { value: 'Test comment' } });
     expect(component.dayState().comment).toBe('Test comment');
   });
 
   it('should not update score if value is out of range', () => {
-    const mockEvent = { target: { value: '5' } };
-    component.setScore(mockEvent);
+    component.setScore({ target: { value: '5' } });
     expect(component.dayState().score).toBe(0);
   });
 });
