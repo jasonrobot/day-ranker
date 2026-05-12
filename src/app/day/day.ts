@@ -61,5 +61,5 @@ export class Day {
       this.dayIndex(),
       { comment: event.target.value }
     );
-  })
+  }, 1_000)
 }
