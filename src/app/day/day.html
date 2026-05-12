@@ -10,8 +10,8 @@
   </label>
   <label>
     Comment:
-    <input type="text"
-           [value]="dayState().comment"
-           (input)="setComment($event)" />
+      <textarea rows="5"
+                [value]="dayState().comment"
+                (input)="setComment($event)"></textarea>
   </label>
 </div>

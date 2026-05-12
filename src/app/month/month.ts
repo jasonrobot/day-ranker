@@ -40,6 +40,11 @@ export class Month {
     return new Date(this.year(), this.monthIndex(), 1).getDay();
   });
 
+  endDayOfWeek = computed(() => {
+    // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    return new Date(this.year(), this.monthIndex() + 1, 0).getDay();
+  });
+
   daysArray = computed(() =>
     Array.from({ length: this.daysInMonth() }, (_, i) => i + 1)
   );
@@ -49,7 +54,8 @@ export class Month {
     const days = this.daysArray();
     // const startPad = Array(this.startDayOfWeek()).fill();
     const startPad = emptyDay().take(this.startDayOfWeek());
-    const allDays: number[] = [...startPad, ...days];
+    const endPad = emptyDay().take(6 - this.endDayOfWeek());
+    const allDays: number[] = [...startPad, ...days, ...endPad];
     const weeks: number[][] = [];
     for (let i = 0; i < allDays.length; i += 7) {
       weeks.push(allDays.slice(i, i + 7));

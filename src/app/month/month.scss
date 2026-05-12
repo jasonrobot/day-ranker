@@ -6,7 +6,6 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  width: 1000px; /* Set fixed width for the calendar */
   box-sizing: border-box;
 }
 
@@ -15,7 +14,8 @@
 }
 
 .calendar-day-label {
-  width: 134px; /* 1000px / 7 ≈ 142px, minus gap/margin */
+  width: 100%;
+  flex-grow: 1;
   height: 28px;
   text-align: center;
   font-weight: bold;
@@ -32,8 +32,8 @@
 }
 
 .calendar-day-cell {
-  width: 134px;
-  height: 134px;
+  flex-grow: 1;
+  width: 100%;
   margin-right: 2px;
   margin-bottom: 2px;
   display: flex;
@@ -43,8 +43,6 @@
 }
 
 .calendar-day-empty {
-  width: 134px;
-  height: 134px;
   background: transparent;
   box-sizing: border-box;
 }
