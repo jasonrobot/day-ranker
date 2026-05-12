@@ -1,5 +1,6 @@
-import { Component, computed, inject, input, output } from "@angular/core";
+import { Component, computed, inject, input } from "@angular/core";
 import { CalendarStore } from "../calendar/calendar.store";
+import { debounce } from "lodash";
 
 export type Score = -3 | -2 | -1 | 0 | 1 | 2 | 3;
 export function isScore(value: number): value is Score {
@@ -54,12 +55,11 @@ export class Day {
     }
   }
 
-
-  setComment(event: any) {
+  setComment = debounce((event: any) => {
     this.calendarStore.updateDay(
       this.monthIndex(),
       this.dayIndex(),
       { comment: event.target.value }
     );
-  }
+  })
 }
