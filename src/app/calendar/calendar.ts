@@ -3,10 +3,11 @@ import { CalendarStore } from './calendar.store';
 import { Month } from '../month/month';
 import { CsvImportService } from '../services/csv-import.service';
 import { StorageService } from '../services/storage.service';
+import { DayPopup } from '../day-popup/day-popup';
 
 @Component({
   selector: 'app-calendar',
-  imports: [Month],
+  imports: [Month, DayPopup],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss',
 })
@@ -22,9 +23,14 @@ export class Calendar {
   private readonly storage = inject(StorageService);
   private readonly store = inject(CalendarStore);
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
+  readonly popup = viewChild(DayPopup);
 
   triggerImport(): void {
     this.fileInput()?.nativeElement.click();
+  }
+
+  openPopup(): void {
+    this.popup()?.open();
   }
 
   async onFileSelected(event: Event): Promise<void> {

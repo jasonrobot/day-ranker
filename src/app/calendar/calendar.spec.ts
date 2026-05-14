@@ -5,6 +5,7 @@ import { Month } from '../month/month';
 import { CalendarStore } from './calendar.store';
 import { StorageService } from '../services/storage.service';
 import { CsvImportService } from '../services/csv-import.service';
+import { DayPopup } from '../day-popup/day-popup';
 
 describe('Calendar', () => {
   let component: Calendar;
@@ -24,7 +25,7 @@ describe('Calendar', () => {
     mockStorageService.saveYear.mockReset();
 
     await TestBed.configureTestingModule({
-      imports: [Calendar, Month],
+      imports: [Calendar, Month, DayPopup],
       providers: [
         CalendarStore,
         { provide: StorageService, useValue: mockStorageService },
@@ -78,8 +79,31 @@ describe('Calendar', () => {
 
   it('renders the Import CSV button', () => {
     fixture.detectChanges();
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-    expect(button.textContent?.trim()).toBe('Import CSV');
+    const el = fixture.nativeElement as HTMLElement;
+    const buttons = el.querySelectorAll('.calendar-header button');
+    const labels = Array.from(buttons).map(b => b.textContent?.trim());
+    expect(labels).toContain('Import CSV');
+  });
+
+  it('renders a "Today" button in the header', () => {
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    const buttons = el.querySelectorAll('.calendar-header button');
+    const labels = Array.from(buttons).map(b => b.textContent?.trim());
+    expect(labels).toContain('Today');
+  });
+
+  it('renders the day-popup component', () => {
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('app-day-popup')).toBeTruthy();
+  });
+
+  it('openPopup() calls popup.open()', () => {
+    fixture.detectChanges();
+    const openSpy = vi.spyOn(component.popup()!, 'open').mockImplementation(() => {});
+    component.openPopup();
+    expect(openSpy).toHaveBeenCalled();
   });
 
   it('onFileSelected does nothing when parse returns null', async () => {
