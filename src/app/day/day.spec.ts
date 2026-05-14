@@ -82,4 +82,10 @@ describe('Day', () => {
     component.setScore({ target: { value: '5' } });
     expect(component.dayState().score).toBe(0);
   });
+
+  it('should flush setComment debounce on destroy', () => {
+    const flushSpy = vi.spyOn(component.setComment, 'flush');
+    component.ngOnDestroy();
+    expect(flushSpy).toHaveBeenCalled();
+  });
 });

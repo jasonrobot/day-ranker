@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from "@angular/core";
+import { Component, computed, inject, input, OnDestroy } from "@angular/core";
 import { CalendarStore } from "../calendar/calendar.store";
 import { debounce } from "lodash";
 
@@ -13,7 +13,7 @@ export function isScore(value: number): value is Score {
   templateUrl: './day.html',
   styleUrl: './day.scss',
 })
-export class Day {
+export class Day implements OnDestroy {
   dayNumber = input<number>(1);
   monthIndex = input<number>(0);
   dayIndex = input<number>(0);
@@ -61,5 +61,9 @@ export class Day {
       this.dayIndex(),
       { comment: event.target.value }
     );
-  }, 1_000)
+  }, 1_000);
+
+  ngOnDestroy(): void {
+    this.setComment.flush();
+  }
 }
