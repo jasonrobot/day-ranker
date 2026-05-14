@@ -1,0 +1,14 @@
+<dialog #dialog>
+  <div class="popup-header">
+    <span class="popup-title">{{ monthName() }} {{ dayNumber() }}</span>
+    <button class="close-btn" (click)="close()">×</button>
+  </div>
+  <div class="popup-body">
+    <button class="nav-btn" (click)="prev()" [disabled]="!canGoPrev()">‹</button>
+    <app-day
+      [dayNumber]="dayNumber()"
+      [monthIndex]="monthIndex()"
+      [dayIndex]="dayIndex()" />
+    <button class="nav-btn" (click)="next()" [disabled]="!canGoNext()">›</button>
+  </div>
+</dialog>
