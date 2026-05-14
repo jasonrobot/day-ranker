@@ -1,0 +1,17 @@
+<div class="day-container {{ scoreClass() }}">
+  <div class="day-number">{{ dayNumber() }}</div>
+  <label>
+    Score (-3 to +3):
+    <input type="number"
+           [value]="dayState().score"
+           (input)="setScore($event)"
+           min="-3"
+           max="3" />
+  </label>
+  <label>
+    Comment:
+      <textarea rows="5"
+                [value]="dayState().comment"
+                (input)="setComment($event)"></textarea>
+  </label>
+</div>

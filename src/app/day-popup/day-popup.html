@@ -5,7 +5,7 @@
   </div>
   <div class="popup-body">
     <button class="nav-btn" (click)="prev()" [disabled]="!canGoPrev()">‹</button>
-    <app-day
+    <app-day-editor
       [dayNumber]="dayNumber()"
       [monthIndex]="monthIndex()"
       [dayIndex]="dayIndex()" />

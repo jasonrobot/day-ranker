@@ -44,6 +44,12 @@ describe('DayPopup', () => {
     expect(component.dayIndex()).toBe(today.getDate() - 1);
   });
 
+  it('open(monthIndex, dayIndex) sets specific day', () => {
+    component.open(3, 14);
+    expect(component.monthIndex()).toBe(3);
+    expect(component.dayIndex()).toBe(14);
+  });
+
   it('open() calls showModal', () => {
     component.open();
     expect(dialogEl.showModal).toHaveBeenCalled();

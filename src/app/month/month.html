@@ -26,6 +26,7 @@
                 [dayNumber]="day"
                 [monthIndex]="monthIndex()"
                 [dayIndex]="day - 1"
+                (dayClick)="dayClick.emit($event)"
               ></app-day>
             } @else {
               <div class="calendar-day-empty"></div>

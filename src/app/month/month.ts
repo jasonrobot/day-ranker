@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { Day } from '../day/day';
 import { CalendarStore } from '../calendar/calendar.store';
 import { CommonModule } from '@angular/common';
@@ -24,6 +24,8 @@ export class Month {
   monthName = input<string>('');
   monthIndex = input<number>(0); // 0-based (0 = January)
   year = input<number>(new Date().getFullYear());
+
+  dayClick = output<{ monthIndex: number; dayIndex: number }>();
 
   calendarStore = inject(CalendarStore);
 

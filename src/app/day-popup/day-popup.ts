@@ -1,10 +1,10 @@
 import { Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { CalendarStore } from '../calendar/calendar.store';
-import { Day } from '../day/day';
+import { DayEditor } from '../day-editor/day-editor';
 
 @Component({
   selector: 'app-day-popup',
-  imports: [Day],
+  imports: [DayEditor],
   templateUrl: './day-popup.html',
   styleUrl: './day-popup.scss',
 })
@@ -30,10 +30,15 @@ export class DayPopup {
     return !(this.monthIndex() === 11 && this.dayIndex() === daysInMonth - 1);
   });
 
-  open(): void {
-    const today = new Date();
-    this.monthIndex.set(today.getMonth());
-    this.dayIndex.set(today.getDate() - 1);
+  open(monthIndex?: number, dayIndex?: number): void {
+    if (monthIndex !== undefined && dayIndex !== undefined) {
+      this.monthIndex.set(monthIndex);
+      this.dayIndex.set(dayIndex);
+    } else {
+      const today = new Date();
+      this.monthIndex.set(today.getMonth());
+      this.dayIndex.set(today.getDate() - 1);
+    }
     this.dialogRef()?.nativeElement.showModal();
   }
 

@@ -7,7 +7,7 @@
   </div>
   <div class="months-list">
     @for (month of months; track month; let i = $index) {
-      <app-month [monthName]="month" [monthIndex]="i" [year]="currentYear"></app-month>
+      <app-month [monthName]="month" [monthIndex]="i" [year]="currentYear" (dayClick)="openDay($event)"></app-month>
     }
   </div>
   <app-day-popup />

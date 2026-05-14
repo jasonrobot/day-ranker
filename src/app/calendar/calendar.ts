@@ -33,6 +33,10 @@ export class Calendar {
     this.popup()?.open();
   }
 
+  openDay(e: { monthIndex: number; dayIndex: number }): void {
+    this.popup()?.open(e.monthIndex, e.dayIndex);
+  }
+
   async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];

@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { Day } from './day';
+import { DayEditor } from '../day-editor/day-editor';
 import { CalendarStore } from '../calendar/calendar.store';
 import { StorageService } from '../services/storage.service';
 
-describe('Day', () => {
-  let component: Day;
-  let fixture: ComponentFixture<Day>;
+describe('DayEditor', () => {
+  let component: DayEditor;
+  let fixture: ComponentFixture<DayEditor>;
 
   const mockStorageService = {
     loadYear: vi.fn().mockResolvedValue(null),
@@ -15,14 +15,14 @@ describe('Day', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Day],
+      imports: [DayEditor],
       providers: [
         CalendarStore,
         { provide: StorageService, useValue: mockStorageService },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Day);
+    fixture = TestBed.createComponent(DayEditor);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
