@@ -75,6 +75,7 @@ describe('Day', () => {
 
   it('should update day comment via setComment', () => {
     component.setComment({ target: { value: 'Test comment' } });
+    component.setComment.flush();
     expect(component.dayState().comment).toBe('Test comment');
   });
 
