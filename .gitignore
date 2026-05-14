@@ -46,3 +46,9 @@ Thumbs.db
 
 # Firebase secrets — keep locally, never commit
 src/environments/environment.prod.ts
+
+.agents/
+.firebase/
+docs/superpowers/plans/2026-05-10-firebase-env-secrets.md
+firestore-debug.log
+skills-lock.json
