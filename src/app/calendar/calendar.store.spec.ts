@@ -44,7 +44,7 @@ describe('CalendarStore', () => {
   });
 
   describe('reset', () => {
-    it('restores all day scores to 0 and comments to empty string', () => {
+    it('restores all day scores to null and comments to empty string', () => {
       store.updateDay(0, 0, { score: 3, comment: 'test' });
       store.reset();
 

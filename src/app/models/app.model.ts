@@ -1,6 +1,10 @@
 // Score type: -3 to +3
 export type Score = -3 | -2 | -1 | 0 | 1 | 2 | 3;
 
+export function isScore(value: number): value is Score {
+  return value >= -3 && value <= 3;
+}
+
 // State for a single day
 export interface DayState {
   score: Score | null;

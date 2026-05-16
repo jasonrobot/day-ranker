@@ -1,12 +1,8 @@
 import { Component, computed, inject, input, OnDestroy } from "@angular/core";
 import { CalendarStore } from "../calendar/calendar.store";
+import { Score, isScore } from "../models/app.model";
 import { scoreClass as getScoreClass } from "../day/day";
 import { debounce } from "lodash";
-
-export type Score = -3 | -2 | -1 | 0 | 1 | 2 | 3;
-export function isScore(value: number): value is Score {
-  return value >= -3 && value <= 3;
-}
 
 
 @Component({
