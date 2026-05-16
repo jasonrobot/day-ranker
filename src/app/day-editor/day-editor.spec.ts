@@ -37,13 +37,13 @@ describe('DayEditor', () => {
     expect(component.dayIndex()).toBe(0);
   });
 
-  it('should have dayState with default score of 0', () => {
-    expect(component.dayState().score).toBe(0);
+  it('should have dayState with default score of null', () => {
+    expect(component.dayState().score).toBeNull();
     expect(component.dayState().comment).toBe('');
   });
 
-  it('should return correct scoreClass for score 0', () => {
-    expect(component.scoreClass()).toBe('');
+  it('should return score-unset scoreClass for null score', () => {
+    expect(component.scoreClass()).toBe('score-unset');
   });
 
   it('should return correct scoreClass for positive scores', () => {
@@ -81,7 +81,7 @@ describe('DayEditor', () => {
 
   it('should not update score if value is out of range', () => {
     component.setScore({ target: { value: '5' } });
-    expect(component.dayState().score).toBe(0);
+    expect(component.dayState().score).toBeNull();
   });
 
   it('should flush setComment debounce on destroy', () => {

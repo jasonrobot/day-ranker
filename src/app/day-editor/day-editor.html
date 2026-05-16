@@ -3,7 +3,7 @@
   <label>
     Score (-3 to +3):
     <input type="number"
-           [value]="dayState().score"
+           [value]="dayState().score ?? 0"
            (input)="setScore($event)"
            min="-3"
            max="3" />
