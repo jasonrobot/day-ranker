@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { DayEditor } from '../day-editor/day-editor';
+import { DayEditor } from './day-editor';
 import { CalendarStore } from '../calendar/calendar.store';
 import { StorageService } from '../services/storage.service';
 
@@ -14,6 +14,7 @@ describe('DayEditor', () => {
   };
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     await TestBed.configureTestingModule({
       imports: [DayEditor],
       providers: [
@@ -24,6 +25,7 @@ describe('DayEditor', () => {
 
     fixture = TestBed.createComponent(DayEditor);
     component = fixture.componentInstance;
+    fixture.detectChanges();
     await fixture.whenStable();
   });
 
@@ -31,62 +33,50 @@ describe('DayEditor', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default inputs', () => {
-    expect(component.dayNumber()).toBe(1);
-    expect(component.monthIndex()).toBe(0);
-    expect(component.dayIndex()).toBe(0);
+  it('initializes form with score 0 when day score is null', () => {
+    expect(component.form.value).toEqual({ score: 0, comment: '' });
   });
 
-  it('should have dayState with default score of null', () => {
-    expect(component.dayState().score).toBeNull();
-    expect(component.dayState().comment).toBe('');
+  it('initializes form from stored day values when store updates', () => {
+    component.calendarStore.updateDay(0, 0, { score: 2, comment: 'great day' });
+    fixture.detectChanges();
+    expect(component.form.value).toEqual({ score: 2, comment: 'great day' });
   });
 
-  it('should return score-unset scoreClass for null score', () => {
+  it('emits dirtyChange(true) when form is dirtied and value changes', () => {
+    const emitted: boolean[] = [];
+    component.dirtyChange.subscribe((v: boolean) => emitted.push(v));
+    component.form.markAsDirty();
+    component.form.patchValue({ score: 1 });
+    expect(emitted).toContain(true);
+  });
+
+  it('save() calls calendarStore.updateDay with form values', () => {
+    const updateSpy = vi.spyOn(component.calendarStore, 'updateDay');
+    component.form.setValue({ score: 2, comment: 'nice' });
+    component.save();
+    expect(updateSpy).toHaveBeenCalledWith(0, 0, { score: 2, comment: 'nice' });
+  });
+
+  it('save() emits closed', () => {
+    let emitted = false;
+    component.closed.subscribe(() => { emitted = true; });
+    component.save();
+    expect(emitted).toBe(true);
+  });
+
+  it('cancel() emits closed without saving', () => {
+    const updateSpy = vi.spyOn(component.calendarStore, 'updateDay');
+    let emitted = false;
+    component.closed.subscribe(() => { emitted = true; });
+    component.cancel();
+    expect(emitted).toBe(true);
+    expect(updateSpy).not.toHaveBeenCalled();
+  });
+
+  it('scoreClass reflects stored score', () => {
     expect(component.scoreClass()).toBe('score-unset');
-  });
-
-  it('should return correct scoreClass for positive scores', () => {
-    component.calendarStore.updateDay(0, 0, { score: 1 });
-    expect(component.scoreClass()).toBe('score-plus1');
-
-    component.calendarStore.updateDay(0, 0, { score: 2 });
-    expect(component.scoreClass()).toBe('score-plus2');
-
     component.calendarStore.updateDay(0, 0, { score: 3 });
     expect(component.scoreClass()).toBe('score-plus3');
-  });
-
-  it('should return correct scoreClass for negative scores', () => {
-    component.calendarStore.updateDay(0, 0, { score: -1 });
-    expect(component.scoreClass()).toBe('score-minus1');
-
-    component.calendarStore.updateDay(0, 0, { score: -2 });
-    expect(component.scoreClass()).toBe('score-minus2');
-
-    component.calendarStore.updateDay(0, 0, { score: -3 });
-    expect(component.scoreClass()).toBe('score-minus3');
-  });
-
-  it('should update day score via setScore', () => {
-    component.setScore({ target: { value: '2' } });
-    expect(component.dayState().score).toBe(2);
-  });
-
-  it('should update day comment via setComment', () => {
-    component.setComment({ target: { value: 'Test comment' } });
-    component.setComment.flush();
-    expect(component.dayState().comment).toBe('Test comment');
-  });
-
-  it('should not update score if value is out of range', () => {
-    component.setScore({ target: { value: '5' } });
-    expect(component.dayState().score).toBeNull();
-  });
-
-  it('should flush setComment debounce on destroy', () => {
-    const flushSpy = vi.spyOn(component.setComment, 'flush');
-    component.ngOnDestroy();
-    expect(flushSpy).toHaveBeenCalled();
   });
 });

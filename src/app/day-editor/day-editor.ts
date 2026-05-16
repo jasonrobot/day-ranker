@@ -1,53 +1,65 @@
-import { Component, computed, inject, input, OnDestroy } from "@angular/core";
+import { Component, computed, effect, inject, input, output } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CalendarStore } from "../calendar/calendar.store";
 import { Score, isScore } from "../models/app.model";
 import { scoreClass as getScoreClass } from "../day/day";
-import { debounce } from "lodash";
-
 
 @Component({
   selector: 'app-day-editor',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './day-editor.html',
   styleUrl: './day-editor.scss',
 })
-export class DayEditor implements OnDestroy {
+export class DayEditor {
   dayNumber = input<number>(1);
   monthIndex = input<number>(0);
   dayIndex = input<number>(0);
 
-  calendarStore = inject(CalendarStore);
+  closed = output<void>();
+  dirtyChange = output<boolean>();
 
-  monthSignal = computed(() => this.calendarStore.months()[this.monthIndex()]);
+  readonly calendarStore = inject(CalendarStore);
+  private readonly fb = inject(FormBuilder);
 
-  dayState = computed(() => this.monthSignal().days[this.dayIndex()]);
+  readonly dayState = computed(() =>
+    this.calendarStore.months()[this.monthIndex()].days[this.dayIndex()]
+  );
+  readonly scoreClass = computed(() => getScoreClass(this.dayState().score));
 
-  toNumber(value: string): number {
-    return Number(value);
-  }
+  readonly form = this.fb.group({
+    score: [0 as number],
+    comment: [''],
+  });
 
-  scoreClass = computed(() => getScoreClass(this.dayState().score));
-
-  setScore(event: any) {
-    const value = this.toNumber(event.target.value);
-    if (isScore(value)) {
-      this.calendarStore.updateDay(
-        this.monthIndex(),
-        this.dayIndex(),
-        { score: value }
+  constructor() {
+    effect(() => {
+      const day = this.dayState();
+      this.form.setValue(
+        { score: day.score ?? 0, comment: day.comment },
+        { emitEvent: false }
       );
-    }
+      this.form.markAsPristine();
+    });
+
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.dirtyChange.emit(this.form.dirty);
+    });
   }
 
-  setComment = debounce((event: any) => {
-    this.calendarStore.updateDay(
-      this.monthIndex(),
-      this.dayIndex(),
-      { comment: event.target.value }
-    );
-  }, 1_000);
+  save(): void {
+    const score = this.form.value.score ?? 0;
+    const comment = this.form.value.comment ?? '';
+    if (isScore(score)) {
+      this.calendarStore.updateDay(this.monthIndex(), this.dayIndex(), {
+        score: score as Score,
+        comment,
+      });
+    }
+    this.closed.emit();
+  }
 
-  ngOnDestroy(): void {
-    this.setComment.flush();
+  cancel(): void {
+    this.closed.emit();
   }
 }
