@@ -3,7 +3,7 @@ export type Score = -3 | -2 | -1 | 0 | 1 | 2 | 3;
 
 // State for a single day
 export interface DayState {
-  score: Score;
+  score: Score | null;
   comment: string;
 }
 
