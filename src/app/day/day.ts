@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, output } from "@angular/core";
 import { CalendarStore } from "../calendar/calendar.store";
 
-export function scoreClass(score: number): string {
+export function scoreClass(score: number | null): string {
   switch (score) {
     case 3: return 'score-plus3';
     case 2: return 'score-plus2';

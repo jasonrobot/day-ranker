@@ -48,7 +48,7 @@ describe('CalendarStore', () => {
       store.updateDay(0, 0, { score: 3, comment: 'test' });
       store.reset();
 
-      expect(store.months()[0].days[0].score).toBe(0);
+      expect(store.months()[0].days[0].score).toBeNull();
       expect(store.months()[0].days[0].comment).toBe('');
     });
 
