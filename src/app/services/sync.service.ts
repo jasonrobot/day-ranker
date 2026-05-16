@@ -1,13 +1,12 @@
 import { Injectable, inject, effect } from '@angular/core';
 import { AuthService } from './auth.service';
-import { StorageService } from './storage.service';
 import { CalendarStore } from '../calendar/calendar.store';
 
 @Injectable({ providedIn: 'root' })
 export class SyncService {
   private readonly authService = inject(AuthService);
-  private readonly storageService = inject(StorageService);
   private readonly calendarStore = inject(CalendarStore);
+  private activeUid: string | null = null;
 
   constructor() {
     effect(() => {
@@ -21,14 +20,14 @@ export class SyncService {
   }
 
   async onLogin(): Promise<void> {
-    const year = new Date().getFullYear();
-    const state = await this.storageService.loadYear(year);
-    if (state) {
-      this.calendarStore.hydrate(state);
-    }
+    const uid = this.authService.user()?.uid ?? null;
+    if (!uid || uid === this.activeUid) return;
+    this.activeUid = uid;
+    await this.calendarStore.setYear(new Date().getFullYear());
   }
 
   onLogout(): void {
+    this.activeUid = null;
     this.calendarStore.reset();
   }
 }

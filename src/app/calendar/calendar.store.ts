@@ -7,8 +7,7 @@ function getDaysInMonth(year: number, monthIndex: number): number {
   return new Date(year, monthIndex + 1, 0).getDate();
 }
 
-function defaultYearState(): YearState {
-  const year = new Date().getFullYear();
+function defaultYearState(year: number): YearState {
   return {
     months: Array.from({ length: 12 }, (_, monthIdx) => ({
       days: Array.from(
@@ -19,23 +18,40 @@ function defaultYearState(): YearState {
   };
 }
 
+interface StoreState {
+  years: Record<number, YearState>;
+  currentYear: number;
+}
+
+function defaultState(): StoreState {
+  const year = new Date().getFullYear();
+  return {
+    years: { [year]: defaultYearState(year) },
+    currentYear: year,
+  };
+}
+
 export const CalendarStore = signalStore(
   { providedIn: 'root' },
-  withState<YearState>(defaultYearState),
-  withComputed(({ months }) => ({
-    monthStats: computed(() =>
-      months().map(month => {
-        const total = month.days.reduce((sum, day) => sum + day.score, 0);
-        const average = month.days.length > 0 ? total / month.days.length : 0;
-        return { total, average };
-      })
-    ),
-  })),
+  withState<StoreState>(defaultState()),
+  withComputed(({ years, currentYear }) => {
+    const months = computed(() => years()[currentYear()]?.months ?? defaultYearState(currentYear()).months);
+    return {
+      months,
+      monthStats: computed(() =>
+        months().map(month => {
+          const total = month.days.reduce((sum, day) => sum + day.score, 0);
+          const average = month.days.length > 0 ? total / month.days.length : 0;
+          return { total, average };
+        })
+      ),
+    };
+  }),
   withMethods(store => {
     const storageService = inject(StorageService);
-    const currentYear = new Date().getFullYear();
     return {
       updateDay(monthIdx: number, dayIdx: number, update: Partial<DayState>) {
+        const year = store.currentYear();
         const months = store.months().map((month, mIdx) => {
           if (mIdx === monthIdx) {
             const days = month.days.map((day, dIdx) =>
@@ -45,17 +61,30 @@ export const CalendarStore = signalStore(
           }
           return month;
         });
-        patchState(store, { months });
-        storageService.saveYear(currentYear, { months });
+        const yearState = { months };
+        patchState(store, { years: { ...store.years(), [year]: yearState } });
+        storageService.saveYear(year, yearState);
       },
       getDay(monthIdx: number, dayIdx: number) {
         return computed(() => store.months()[monthIdx].days[dayIdx]);
       },
-      hydrate(state: YearState) {
-        patchState(store, { months: state.months });
+      async setYear(year: number): Promise<void> {
+        patchState(store, {
+          currentYear: year,
+          years: store.years()[year]
+            ? store.years()
+            : { ...store.years(), [year]: defaultYearState(year) },
+        });
+        const state = await storageService.loadYear(year);
+        if (state) {
+          patchState(store, { years: { ...store.years(), [year]: state } });
+        }
+      },
+      hydrate(year: number, state: YearState) {
+        patchState(store, { years: { ...store.years(), [year]: state } });
       },
       reset() {
-        patchState(store, defaultYearState());
+        patchState(store, defaultState());
       },
     };
   })

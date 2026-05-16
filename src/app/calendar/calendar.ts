@@ -17,13 +17,13 @@ export class Calendar {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
-  currentYear = new Date().getFullYear();
-
   private readonly csvImport = inject(CsvImportService);
   private readonly storage = inject(StorageService);
-  private readonly store = inject(CalendarStore);
+  readonly store = inject(CalendarStore);
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
   readonly popup = viewChild(DayPopup);
+
+  readonly currentYear = this.store.currentYear;
 
   triggerImport(): void {
     this.fileInput()?.nativeElement.click();
@@ -37,6 +37,14 @@ export class Calendar {
     this.popup()?.open(e.monthIndex, e.dayIndex);
   }
 
+  prevYear(): void {
+    this.store.setYear(this.store.currentYear() - 1);
+  }
+
+  nextYear(): void {
+    this.store.setYear(this.store.currentYear() + 1);
+  }
+
   async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -47,7 +55,7 @@ export class Calendar {
     if (!result) return;
 
     await this.storage.saveYear(result.year, result.state);
-    this.store.hydrate(result.state);
+    this.store.hydrate(result.year, result.state);
     input.value = '';
   }
 }

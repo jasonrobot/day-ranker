@@ -4,15 +4,8 @@ import { AuthService } from './auth.service';
 import { StorageService } from './storage.service';
 import { CalendarStore } from '../calendar/calendar.store';
 import { SyncService } from './sync.service';
-import { YearState } from '../models/app.model';
 
 const CURRENT_YEAR = new Date().getFullYear();
-
-const mockYearState: YearState = {
-  months: Array.from({ length: 12 }, () => ({
-    days: [{ score: 1, comment: 'loaded' }],
-  })),
-};
 
 describe('SyncService', () => {
   let service: SyncService;
@@ -23,7 +16,7 @@ describe('SyncService', () => {
   };
 
   const mockCalendarStore = {
-    hydrate: vi.fn(),
+    setYear: vi.fn().mockResolvedValue(undefined),
     reset: vi.fn(),
   };
 
@@ -32,8 +25,6 @@ describe('SyncService', () => {
   };
 
   beforeEach(() => {
-    mockStorageService.loadYear.mockResolvedValue(null);
-
     TestBed.configureTestingModule({
       providers: [
         SyncService,
@@ -44,25 +35,29 @@ describe('SyncService', () => {
     });
 
     service = TestBed.inject(SyncService);
-    // Clear calls that happened in the constructor (effect fires with null user → onLogout)
     vi.clearAllMocks();
-    mockStorageService.loadYear.mockResolvedValue(null);
+    mockCalendarStore.setYear.mockResolvedValue(undefined);
   });
 
-  it('calls storageService.loadYear with current year on onLogin', async () => {
+  it('calls calendarStore.setYear with current year on onLogin', async () => {
+    mockAuthService.user.mockReturnValue({ uid: 'user1' });
     await service.onLogin();
-    expect(mockStorageService.loadYear).toHaveBeenCalledWith(CURRENT_YEAR);
+    expect(mockCalendarStore.setYear).toHaveBeenCalledWith(CURRENT_YEAR);
   });
 
-  it('calls calendarStore.hydrate when loadYear returns data', async () => {
-    mockStorageService.loadYear.mockResolvedValue(mockYearState);
+  it('does not call setYear again if onLogin fires with the same uid', async () => {
+    mockAuthService.user.mockReturnValue({ uid: 'user1' });
     await service.onLogin();
-    expect(mockCalendarStore.hydrate).toHaveBeenCalledWith(mockYearState);
+    await service.onLogin();
+    expect(mockCalendarStore.setYear).toHaveBeenCalledOnce();
   });
 
-  it('does not call calendarStore.hydrate when loadYear returns null', async () => {
+  it('calls setYear again after logout and re-login with same uid', async () => {
+    mockAuthService.user.mockReturnValue({ uid: 'user1' });
     await service.onLogin();
-    expect(mockCalendarStore.hydrate).not.toHaveBeenCalled();
+    service.onLogout();
+    await service.onLogin();
+    expect(mockCalendarStore.setYear).toHaveBeenCalledTimes(2);
   });
 
   it('calls calendarStore.reset on onLogout', () => {

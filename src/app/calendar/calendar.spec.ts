@@ -55,7 +55,7 @@ describe('Calendar', () => {
   });
 
   it('should set currentYear to the current year', () => {
-    expect(component.currentYear).toBe(new Date().getFullYear());
+    expect(component.currentYear()).toBe(new Date().getFullYear());
   });
 
   it('should render calendar container', () => {
@@ -68,7 +68,7 @@ describe('Calendar', () => {
     fixture.detectChanges();
     const el = fixture.nativeElement as HTMLElement;
     const heading = el.querySelector('h2') as HTMLElement;
-    expect(heading.textContent).toContain(`Year: ${component.currentYear}`);
+    expect(heading.textContent).toContain(`Year: ${component.currentYear()}`);
   });
 
   it('should render 12 month components', () => {

@@ -36,7 +36,7 @@ describe('CalendarStore', () => {
         })),
       };
 
-      store.hydrate(state);
+      store.hydrate(CURRENT_YEAR, state);
 
       expect(store.months()[0].days[0].score).toBe(2);
       expect(store.months()[0].days[0].comment).toBe('loaded');
