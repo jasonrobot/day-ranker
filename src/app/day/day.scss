@@ -17,6 +17,13 @@
   margin: 0;
   gap: 4px;
   cursor: pointer;
+  height: calc(100vw / 10);
+  min-height: 70px;
+  overflow: hidden;
+
+  &.is-today {
+    box-shadow: inset 0 0 5px 1px #005A9C;
+  }
 }
 
 .day-number {

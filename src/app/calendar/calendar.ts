@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, viewChild, DOCUMENT } from '@angular/core';
 import { CalendarStore } from './calendar.store';
 import { Month } from '../month/month';
 import { CsvImportService } from '../services/csv-import.service';
@@ -19,6 +19,7 @@ export class Calendar {
 
   private readonly csvImport = inject(CsvImportService);
   private readonly storage = inject(StorageService);
+  private readonly document = inject(DOCUMENT);
   readonly store = inject(CalendarStore);
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
   readonly popup = viewChild(DayPopup);
@@ -30,7 +31,14 @@ export class Calendar {
   }
 
   openPopup(): void {
+    const today = new Date();
+    if (this.store.currentYear() !== today.getFullYear()) {
+      this.store.setYear(today.getFullYear());
+    }
     this.popup()?.open();
+    setTimeout(() => {
+      this.document.querySelector('.is-today')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
   }
 
   openDay(e: { monthIndex: number; dayIndex: number }): void {

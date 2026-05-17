@@ -35,6 +35,13 @@ export class Day {
 
   scoreClass = computed(() => scoreClass(this.dayState().score));
 
+  private readonly today = new Date();
+  isToday = computed(() =>
+    this.calendarStore.currentYear() === this.today.getFullYear() &&
+    this.monthIndex() === this.today.getMonth() &&
+    this.dayIndex() === this.today.getDate() - 1
+  );
+
   onClick(): void {
     this.dayClick.emit({ monthIndex: this.monthIndex(), dayIndex: this.dayIndex() });
   }

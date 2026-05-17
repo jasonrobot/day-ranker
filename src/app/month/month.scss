@@ -5,8 +5,8 @@
 .calendar-grid {
   display: flex;
   flex-direction: column;
-  gap: 2px;
   box-sizing: border-box;
+  gap: 5px;
 }
 
 .calendar-header {
@@ -29,13 +29,12 @@
 
 .calendar-week {
   display: flex;
+  gap: 5px;
 }
 
 .calendar-day-cell {
   flex-grow: 1;
   width: 100%;
-  margin-right: 2px;
-  margin-bottom: 2px;
   display: flex;
   align-items: stretch;
   justify-content: stretch;

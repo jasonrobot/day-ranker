@@ -1,4 +1,4 @@
-<div class="day-container {{ scoreClass() }}" (click)="onClick()">
+<div class="day-container {{ scoreClass() }}" [class.is-today]="isToday()" (click)="onClick()">
   <div class="day-number">{{ dayNumber() }}</div>
   <div class="day-score">{{ dayState().score ?? '-' }}</div>
   <div class="day-comment">{{ dayState().comment }}</div>
