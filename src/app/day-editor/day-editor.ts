@@ -16,7 +16,7 @@ export class DayEditor {
   monthIndex = input<number>(0);
   dayIndex = input<number>(0);
 
-  closed = output<void>();
+  saved = output<void>();
   dirtyChange = output<boolean>();
 
   readonly calendarStore = inject(CalendarStore);
@@ -56,10 +56,6 @@ export class DayEditor {
       score: score as Score,
       comment,
     });
-    this.closed.emit();
-  }
-
-  cancel(): void {
-    this.closed.emit();
+    this.saved.emit();
   }
 }

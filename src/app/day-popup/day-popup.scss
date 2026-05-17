@@ -3,6 +3,13 @@ dialog {
   border-radius: 8px;
   padding: 0;
   min-width: 320px;
+  width: 50vh;
+  height: 70vh;
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
 
   &::backdrop {
     background: rgba(0, 0, 0, 0.4);
@@ -33,9 +40,11 @@ dialog {
 
 .popup-body {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 8px;
   padding: 16px;
+  flex: 1;
+  min-height: 0;
 }
 
 .nav-btn {
@@ -46,9 +55,18 @@ dialog {
   cursor: pointer;
   padding: 4px 12px;
   line-height: 1;
+  align-self: center;
 
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
   }
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #eee;
 }

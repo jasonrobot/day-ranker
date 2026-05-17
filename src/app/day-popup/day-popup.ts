@@ -10,6 +10,7 @@ import { DayEditor } from '../day-editor/day-editor';
 })
 export class DayPopup {
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialog');
+  readonly editorRef = viewChild(DayEditor);
   private readonly store = inject(CalendarStore);
 
   monthIndex = signal<number>(0);
@@ -48,8 +49,8 @@ export class DayPopup {
     this.dialogRef()?.nativeElement.close();
   }
 
-  onEditorClosed(): void {
-    this.close();
+  save(): void {
+    this.editorRef()?.save();
   }
 
   onDirtyChange(dirty: boolean): void {

@@ -4,17 +4,17 @@
     <button class="close-btn" (click)="close()">×</button>
   </div>
   <div class="popup-body">
-    @if (!isDirty()) {
-      <button class="nav-btn" (click)="prev()" [disabled]="!canGoPrev()">‹</button>
-    }
+    <button class="nav-btn" (click)="prev()" [disabled]="!canGoPrev()" [style.visibility]="isDirty() ? 'hidden' : 'visible'">‹</button>
     <app-day-editor
       [dayNumber]="dayNumber()"
       [monthIndex]="monthIndex()"
       [dayIndex]="dayIndex()"
-      (closed)="onEditorClosed()"
+      (saved)="close()"
       (dirtyChange)="onDirtyChange($event)" />
-    @if (!isDirty()) {
-      <button class="nav-btn" (click)="next()" [disabled]="!canGoNext()">›</button>
-    }
+    <button class="nav-btn" (click)="next()" [disabled]="!canGoNext()" [style.visibility]="isDirty() ? 'hidden' : 'visible'">›</button>
+  </div>
+  <div class="popup-footer">
+    <button (click)="save()">Save</button>
+    <button (click)="close()">Cancel</button>
   </div>
 </dialog>
