@@ -18,6 +18,26 @@ npm test
 npm run watch
 ```
 
+## Running Tests
+
+Always redirect test output to a file instead of piping — piping truncates output and misses failures:
+
+```bash
+NO_COLOR=1 npm test -- --reporter=verbose > /tmp/test-output.txt 2>&1
+```
+
+Then search the file for results:
+
+```bash
+# Find failures
+grep -n "FAIL\|Error" /tmp/test-output.txt
+
+# Check overall result
+grep -n "Tests\|Test Files" /tmp/test-output.txt
+```
+
+The file lives in `/tmp` and will be overwritten on the next run.
+
 ## Architecture
 
 **Stack**: Angular 21.1 with NgRx Signals, TypeScript, SCSS, Vitest
