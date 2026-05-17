@@ -33,6 +33,11 @@ describe('isBooleanField', () => {
     const f: FieldDefinition = { type: 'text', label: 'Notes', hidden: false, order: 0 };
     expect(isBooleanField(f)).toBe(false);
   });
+
+  it('returns false for a number field', () => {
+    const f: FieldDefinition = { type: 'number', label: 'Energy', hidden: false, order: 0, range: [0, 10] };
+    expect(isBooleanField(f)).toBe(false);
+  });
 });
 
 describe('isNumberField', () => {
@@ -43,6 +48,11 @@ describe('isNumberField', () => {
 
   it('returns false for a text field', () => {
     const f: FieldDefinition = { type: 'text', label: 'Notes', hidden: false, order: 0 };
+    expect(isNumberField(f)).toBe(false);
+  });
+
+  it('returns false for a boolean field', () => {
+    const f: FieldDefinition = { type: 'boolean', label: 'Good', hidden: false, order: 0 };
     expect(isNumberField(f)).toBe(false);
   });
 });
