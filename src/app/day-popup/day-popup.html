@@ -4,7 +4,7 @@
     <button class="close-btn" (click)="close()">×</button>
   </div>
   <div class="popup-body">
-    @if (!isDirty) {
+    @if (!isDirty()) {
       <button class="nav-btn" (click)="prev()" [disabled]="!canGoPrev()">‹</button>
     }
     <app-day-editor
@@ -13,7 +13,7 @@
       [dayIndex]="dayIndex()"
       (closed)="onEditorClosed()"
       (dirtyChange)="onDirtyChange($event)" />
-    @if (!isDirty) {
+    @if (!isDirty()) {
       <button class="nav-btn" (click)="next()" [disabled]="!canGoNext()">›</button>
     }
   </div>

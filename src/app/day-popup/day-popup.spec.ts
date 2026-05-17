@@ -162,19 +162,19 @@ describe('DayPopup', () => {
 
   it('onDirtyChange(true) sets isDirty to true', () => {
     component.onDirtyChange(true);
-    expect(component.isDirty).toBe(true);
+    expect(component.isDirty()).toBe(true);
   });
 
   it('onDirtyChange(false) sets isDirty to false', () => {
-    component.isDirty = true;
+    component.isDirty.set(true);
     component.onDirtyChange(false);
-    expect(component.isDirty).toBe(false);
+    expect(component.isDirty()).toBe(false);
   });
 
   it('open() resets isDirty to false', () => {
-    component.isDirty = true;
+    component.isDirty.set(true);
     component.open(0, 0);
-    expect(component.isDirty).toBe(false);
+    expect(component.isDirty()).toBe(false);
   });
 
   it('hides nav buttons when isDirty is true', async () => {
