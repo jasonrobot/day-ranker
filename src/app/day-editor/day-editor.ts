@@ -28,7 +28,7 @@ export class DayEditor {
   readonly scoreClass = computed(() => getScoreClass(this.dayState().score));
 
   readonly form = this.fb.group({
-    score: [0 as number],
+    score: [0],
     comment: [''],
   });
 
@@ -40,6 +40,7 @@ export class DayEditor {
         { emitEvent: false }
       );
       this.form.markAsPristine();
+      this.dirtyChange.emit(false);
     });
 
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
@@ -50,12 +51,11 @@ export class DayEditor {
   save(): void {
     const score = this.form.value.score ?? 0;
     const comment = this.form.value.comment ?? '';
-    if (isScore(score)) {
-      this.calendarStore.updateDay(this.monthIndex(), this.dayIndex(), {
-        score: score as Score,
-        comment,
-      });
-    }
+    if (!isScore(score)) return;
+    this.calendarStore.updateDay(this.monthIndex(), this.dayIndex(), {
+      score: score as Score,
+      comment,
+    });
     this.closed.emit();
   }
 

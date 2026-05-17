@@ -74,6 +74,22 @@ describe('DayEditor', () => {
     expect(updateSpy).not.toHaveBeenCalled();
   });
 
+  it('save() does NOT emit closed when score is out of range', () => {
+    let emitted = false;
+    component.closed.subscribe(() => { emitted = true; });
+    component.form.patchValue({ score: 5 });
+    component.save();
+    expect(emitted).toBe(false);
+  });
+
+  it('effect emits dirtyChange(false) when day state changes', () => {
+    const emitted: boolean[] = [];
+    component.dirtyChange.subscribe((v: boolean) => emitted.push(v));
+    component.calendarStore.updateDay(0, 0, { score: 1, comment: 'test' });
+    fixture.detectChanges();
+    expect(emitted).toContain(false);
+  });
+
   it('scoreClass reflects stored score', () => {
     expect(component.scoreClass()).toBe('score-unset');
     component.calendarStore.updateDay(0, 0, { score: 3 });
