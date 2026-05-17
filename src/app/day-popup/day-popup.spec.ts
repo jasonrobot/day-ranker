@@ -154,9 +154,9 @@ describe('DayPopup', () => {
     expect(component.dayNumber()).toBe(14);
   });
 
-  it('onEditorClosed() calls dialog close', () => {
+  it('close() calls dialog close', () => {
     component.open(0, 0);
-    component.onEditorClosed();
+    component.close();
     expect(dialogEl.close).toHaveBeenCalled();
   });
 
@@ -183,7 +183,8 @@ describe('DayPopup', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const navBtns = fixture.nativeElement.querySelectorAll('.nav-btn');
-    expect(navBtns.length).toBe(0);
+    expect(navBtns[0].style.visibility).toBe('hidden');
+    expect(navBtns[1].style.visibility).toBe('hidden');
   });
 
   it('shows nav buttons when isDirty is false', async () => {

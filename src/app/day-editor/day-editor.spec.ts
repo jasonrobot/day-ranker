@@ -58,25 +58,16 @@ describe('DayEditor', () => {
     expect(updateSpy).toHaveBeenCalledWith(0, 0, { score: 2, comment: 'nice' });
   });
 
-  it('save() emits closed', () => {
+  it('save() emits saved', () => {
     let emitted = false;
-    component.closed.subscribe(() => { emitted = true; });
+    component.saved.subscribe(() => { emitted = true; });
     component.save();
     expect(emitted).toBe(true);
   });
 
-  it('cancel() emits closed without saving', () => {
-    const updateSpy = vi.spyOn(component.calendarStore, 'updateDay');
+  it('save() does NOT emit saved when score is out of range', () => {
     let emitted = false;
-    component.closed.subscribe(() => { emitted = true; });
-    component.cancel();
-    expect(emitted).toBe(true);
-    expect(updateSpy).not.toHaveBeenCalled();
-  });
-
-  it('save() does NOT emit closed when score is out of range', () => {
-    let emitted = false;
-    component.closed.subscribe(() => { emitted = true; });
+    component.saved.subscribe(() => { emitted = true; });
     component.form.patchValue({ score: 5 });
     component.save();
     expect(emitted).toBe(false);
