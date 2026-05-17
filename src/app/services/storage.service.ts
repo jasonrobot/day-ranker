@@ -54,7 +54,7 @@ export class StorageService {
     if (!uid) return DEFAULT_SETTINGS;
 
     try {
-      const ref = doc(this.firestore, `users/${uid}/settings`);
+      const ref = doc(this.firestore, `users/${uid}/settings/data`);
       const snap = await getDoc(ref);
       if (snap.exists()) {
         return snap.data() as AppSettings;
@@ -73,7 +73,7 @@ export class StorageService {
 
     localStorage.setItem(this.localSettingsKey(uid), JSON.stringify(settings));
 
-    const ref = doc(this.firestore, `users/${uid}/settings`);
+    const ref = doc(this.firestore, `users/${uid}/settings/data`);
     setDoc(ref, settings).catch(e => {
       console.error('Firestore settings write failed', e);
     });
