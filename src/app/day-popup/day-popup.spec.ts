@@ -153,4 +153,45 @@ describe('DayPopup', () => {
     component.dayIndex.set(13);
     expect(component.dayNumber()).toBe(14);
   });
+
+  it('onEditorClosed() calls dialog close', () => {
+    component.open(0, 0);
+    component.onEditorClosed();
+    expect(dialogEl.close).toHaveBeenCalled();
+  });
+
+  it('onDirtyChange(true) sets isDirty to true', () => {
+    component.onDirtyChange(true);
+    expect(component.isDirty).toBe(true);
+  });
+
+  it('onDirtyChange(false) sets isDirty to false', () => {
+    component.isDirty = true;
+    component.onDirtyChange(false);
+    expect(component.isDirty).toBe(false);
+  });
+
+  it('open() resets isDirty to false', () => {
+    component.isDirty = true;
+    component.open(0, 0);
+    expect(component.isDirty).toBe(false);
+  });
+
+  it('hides nav buttons when isDirty is true', async () => {
+    component.open(0, 0);
+    component.onDirtyChange(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const navBtns = fixture.nativeElement.querySelectorAll('.nav-btn');
+    expect(navBtns.length).toBe(0);
+  });
+
+  it('shows nav buttons when isDirty is false', async () => {
+    component.open(0, 5);
+    component.onDirtyChange(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const navBtns = fixture.nativeElement.querySelectorAll('.nav-btn');
+    expect(navBtns.length).toBe(2);
+  });
 });

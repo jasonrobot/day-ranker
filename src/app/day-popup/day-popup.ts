@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { CalendarStore } from '../calendar/calendar.store';
 import { DayEditor } from '../day-editor/day-editor';
 
@@ -11,9 +11,11 @@ import { DayEditor } from '../day-editor/day-editor';
 export class DayPopup {
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialog');
   private readonly store = inject(CalendarStore);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   monthIndex = signal<number>(0);
   dayIndex = signal<number>(0);
+  isDirty = false;
 
   readonly monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -31,6 +33,7 @@ export class DayPopup {
   });
 
   open(monthIndex?: number, dayIndex?: number): void {
+    this.isDirty = false;
     if (monthIndex !== undefined && dayIndex !== undefined) {
       this.monthIndex.set(monthIndex);
       this.dayIndex.set(dayIndex);
@@ -44,6 +47,15 @@ export class DayPopup {
 
   close(): void {
     this.dialogRef()?.nativeElement.close();
+  }
+
+  onEditorClosed(): void {
+    this.close();
+  }
+
+  onDirtyChange(dirty: boolean): void {
+    this.isDirty = dirty;
+    this.cdr.detectChanges();
   }
 
   prev(): void {
