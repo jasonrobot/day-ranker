@@ -3,7 +3,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { signal } from '@angular/core';
 import { FIREBASE_FIRESTORE } from '../firebase';
 import { AuthService } from './auth.service';
-import { YearState } from '../models/app.model';
+import { AppSettings, YearState } from '../models/app.model';
 
 const { mockGetDoc, mockSetDoc, mockDoc } = vi.hoisted(() => ({
   mockGetDoc: vi.fn(),
@@ -101,6 +101,72 @@ describe('StorageService', () => {
       mockUserSignal.set(null);
       const result = await service.loadYear(CURRENT_YEAR);
       expect(result).toBeNull();
+      mockUserSignal.set({ uid: 'user123' });
+    });
+  });
+
+  describe('loadSettings', () => {
+    it('returns default settings when no data exists in Firestore or localStorage', async () => {
+      const result = await service.loadSettings();
+      expect(result).toEqual({ customFields: [] });
+    });
+
+    it('returns data from Firestore when available', async () => {
+      const mockSettings: AppSettings = { customFields: [{ type: 'text', label: 'Notes', hidden: false, order: 0 }] };
+      mockGetDoc.mockResolvedValue({
+        exists: () => true,
+        data: () => mockSettings,
+      });
+
+      const result = await service.loadSettings();
+      expect(result).toEqual(mockSettings);
+    });
+
+    it('falls back to localStorage when Firestore throws', async () => {
+      const mockSettings: AppSettings = { customFields: [{ type: 'boolean', label: 'Good', hidden: false, order: 0 }] };
+      mockGetDoc.mockRejectedValue(new Error('network error'));
+      localStorage.setItem('day-ranker:user123:settings', JSON.stringify(mockSettings));
+
+      const result = await service.loadSettings();
+      expect(result).toEqual(mockSettings);
+    });
+
+    it('returns default settings when Firestore throws and localStorage is empty', async () => {
+      mockGetDoc.mockRejectedValue(new Error('network error'));
+
+      const result = await service.loadSettings();
+      expect(result).toEqual({ customFields: [] });
+    });
+
+    it('returns default settings when user is not logged in', async () => {
+      mockUserSignal.set(null);
+      const result = await service.loadSettings();
+      expect(result).toEqual({ customFields: [] });
+      mockUserSignal.set({ uid: 'user123' });
+    });
+  });
+
+  describe('saveSettings', () => {
+    const mockSettings: AppSettings = { customFields: [{ type: 'text', label: 'Notes', hidden: false, order: 0 }] };
+
+    it('writes to localStorage synchronously with the correct key', async () => {
+      await service.saveSettings(mockSettings);
+
+      const stored = localStorage.getItem('day-ranker:user123:settings');
+      expect(JSON.parse(stored!)).toEqual(mockSettings);
+    });
+
+    it('calls setDoc with the correct Firestore path', async () => {
+      await service.saveSettings(mockSettings);
+
+      expect(mockDoc).toHaveBeenCalledWith({}, 'users/user123/settings/data');
+      expect(mockSetDoc).toHaveBeenCalledWith('mock-doc-ref', mockSettings);
+    });
+
+    it('does nothing when user is not logged in', async () => {
+      mockUserSignal.set(null);
+      await service.saveSettings(mockSettings);
+      expect(mockSetDoc).not.toHaveBeenCalled();
       mockUserSignal.set({ uid: 'user123' });
     });
   });
