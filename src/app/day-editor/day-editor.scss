@@ -37,6 +37,10 @@
   align-items: stretch;
 }
 
+.comment-input {
+  min-height: 175px;
+}
+
 .day-container input[type="number"],
 .day-container input[type="text"] {
   width: 100%;
