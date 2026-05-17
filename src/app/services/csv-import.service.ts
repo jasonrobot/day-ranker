@@ -16,7 +16,11 @@ export class CsvImportService {
 
       const datePart = line.substring(0, firstComma);
       const scorePart = line.substring(firstComma + 1, secondComma);
-      const comment = line.substring(secondComma + 1);
+      let comment = line.substring(secondComma + 1);
+
+      if (comment.startsWith('"') && comment.endsWith('"')) {
+        comment = comment.slice(1, -1);
+      }
 
       const dateMatch = datePart.match(/^(\d{4})-(\d{2})-(\d{2})$/);
       if (!dateMatch) continue;
@@ -53,7 +57,7 @@ export class CsvImportService {
       months: Array.from({ length: 12 }, (_, monthIdx) => ({
         days: Array.from(
           { length: new Date(year, monthIdx + 1, 0).getDate() },
-          () => ({ score: 0 as Score, comment: '' })
+          () => ({ score: null, comment: '' })
         ),
       })),
     };

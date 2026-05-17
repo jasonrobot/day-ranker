@@ -35,8 +35,8 @@ describe('CsvImportService', () => {
     expect(result!.year).toBe(2025);
     expect(result!.state.months[0].days[0].score).toBe(1);
     expect(result!.state.months[1].days[0].score).toBe(3);
-    // 2024 row not loaded — June 15 should be default 0
-    expect(result!.state.months[5].days[14].score).toBe(0);
+    // 2024 row not loaded — June 15 should be default null
+    expect(result!.state.months[5].days[14].score).toBeNull();
   });
 
   it('skips rows with an invalid date format without throwing', () => {
@@ -51,7 +51,7 @@ describe('CsvImportService', () => {
     const csv = '2025-04-05,bad,comment\n2025-04-06,1,valid';
     const result = service.parse(csv);
 
-    expect(result!.state.months[3].days[4].score).toBe(0);
+    expect(result!.state.months[3].days[4].score).toBeNull();
     expect(result!.state.months[3].days[5].score).toBe(1);
   });
 
@@ -79,11 +79,27 @@ describe('CsvImportService', () => {
     expect(result!.state.months[1].days[28].comment).toBe('leap day');
   });
 
-  it('initializes unset days to score 0 and empty comment', () => {
+  it('initializes unset days to score null and empty comment', () => {
     const csv = '2025-07-04,1,holiday';
     const result = service.parse(csv);
 
-    expect(result!.state.months[0].days[0].score).toBe(0);
+    expect(result!.state.months[0].days[0].score).toBeNull();
     expect(result!.state.months[0].days[0].comment).toBe('');
+  });
+
+  it('strips surrounding double-quotes from comment', () => {
+    const csv = '2025-05-10,2,"Great day"';
+    const result = service.parse(csv);
+
+    expect(result!.state.months[4].days[9].comment).toBe('Great day');
+  });
+
+  it('strips surrounding quotes from a comment that contains commas', () => {
+    const csv = '2025-04-18,2,"Tidied up the room, went to the sounders game, had a nice day overall"';
+    const result = service.parse(csv);
+
+    expect(result!.state.months[3].days[17].comment).toBe(
+      'Tidied up the room, went to the sounders game, had a nice day overall'
+    );
   });
 });
