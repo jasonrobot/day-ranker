@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output } from "@angular/core";
+import { afterNextRender, Component, computed, effect, ElementRef, inject, input, output, viewChild } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CalendarStore } from "../calendar/calendar.store";
@@ -18,6 +18,8 @@ export class DayEditor {
 
   saved = output<void>();
   dirtyChange = output<boolean>();
+
+  commentInput = viewChild<ElementRef<HTMLTextAreaElement>>('commentInput');
 
   readonly calendarStore = inject(CalendarStore);
   private readonly fb = inject(FormBuilder);
@@ -46,6 +48,10 @@ export class DayEditor {
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
       this.dirtyChange.emit(this.form.dirty);
     });
+  }
+
+  focusComment() {
+    this.commentInput()?.nativeElement.focus();
   }
 
   save(): void {

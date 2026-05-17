@@ -43,6 +43,7 @@ export class DayPopup {
       this.dayIndex.set(today.getDate() - 1);
     }
     this.dialogRef()?.nativeElement.showModal();
+    this.editorRef()?.focusComment()
   }
 
   close(): void {

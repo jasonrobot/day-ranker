@@ -63,3 +63,9 @@
 .score-unset {
   background: #e0e0e0 !important;
 }
+
+@media screen and (max-width: 800px) {
+  .day-comment {
+    display: none;
+  }
+}
