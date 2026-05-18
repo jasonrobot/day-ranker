@@ -4,10 +4,11 @@ import { Month } from '../month/month';
 import { CsvImportService } from '../services/csv-import.service';
 import { StorageService } from '../services/storage.service';
 import { DayPopup } from '../day-popup/day-popup';
+import { SettingsDialog } from '../settings-dialog/settings-dialog';
 
 @Component({
   selector: 'app-calendar',
-  imports: [Month, DayPopup],
+  imports: [Month, DayPopup, SettingsDialog],
   templateUrl: './calendar.html',
   styleUrl: './calendar.scss',
 })
@@ -23,6 +24,7 @@ export class Calendar {
   readonly store = inject(CalendarStore);
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
   readonly popup = viewChild(DayPopup);
+  readonly settingsDialog = viewChild(SettingsDialog);
 
   readonly currentYear = this.store.currentYear;
 
@@ -43,6 +45,10 @@ export class Calendar {
 
   openDay(e: { monthIndex: number; dayIndex: number }): void {
     this.popup()?.open(e.monthIndex, e.dayIndex);
+  }
+
+  openSettings(): void {
+    this.settingsDialog()?.open();
   }
 
   prevYear(): void {

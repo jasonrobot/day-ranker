@@ -7,6 +7,7 @@
     </h2>
     <button (click)="openPopup()">Today</button>
     <button (click)="triggerImport()">Import CSV</button>
+    <button (click)="openSettings()">Settings</button>
     <input #fileInput type="file" accept=".csv" style="display: none" (change)="onFileSelected($event)">
   </div>
   <div class="months-list">
@@ -15,4 +16,5 @@
     }
   </div>
   <app-day-popup />
+  <app-settings-dialog />
 </div>
