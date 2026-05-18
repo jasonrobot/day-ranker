@@ -15,6 +15,8 @@ describe('CalendarStore', () => {
   const mockStorageService = {
     loadYear: vi.fn().mockResolvedValue(null),
     saveYear: vi.fn().mockResolvedValue(undefined),
+    loadSettings: vi.fn().mockResolvedValue({ customFields: [] }),
+    saveSettings: vi.fn().mockResolvedValue(undefined),
   };
 
   beforeEach(() => {
@@ -77,6 +79,48 @@ describe('CalendarStore', () => {
       expect(year).toBe(CURRENT_YEAR);
       expect(state.months[1].days[2].score).toBe(-1);
       expect(state.months[1].days[2].comment).toBe('bad day');
+    });
+  });
+
+  describe('addField', () => {
+    it('adds a new field and returns null on success', () => {
+      const result = store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
+      expect(result).toBeNull();
+      expect(store.customFields().length).toBe(1);
+      expect(store.customFields()[0].label).toBe('Notes');
+    });
+
+    it('returns an error string when a duplicate label is added', () => {
+      store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
+      const result = store.addField({ type: 'boolean', label: 'Notes', hidden: false, order: 1 });
+      expect(result).toBeTypeOf('string');
+      expect(store.customFields().length).toBe(1);
+    });
+
+    it('calls saveSettings after adding a field', () => {
+      store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
+      expect(mockStorageService.saveSettings).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('updateField', () => {
+    it('updates the hidden property of a field', () => {
+      store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
+      store.updateField('Notes', { hidden: true });
+      expect(store.customFields()[0].hidden).toBe(true);
+    });
+
+    it('updates the order property of a field', () => {
+      store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
+      store.updateField('Notes', { order: 5 });
+      expect(store.customFields()[0].order).toBe(5);
+    });
+
+    it('calls saveSettings after updating a field', () => {
+      store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
+      vi.clearAllMocks();
+      store.updateField('Notes', { order: 1 });
+      expect(mockStorageService.saveSettings).toHaveBeenCalledOnce();
     });
   });
 });

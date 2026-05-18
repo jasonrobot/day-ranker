@@ -12,6 +12,8 @@ describe('DayPopup', () => {
   const mockStorageService = {
     loadYear: vi.fn().mockResolvedValue(null),
     saveYear: vi.fn().mockResolvedValue(undefined),
+    loadSettings: vi.fn().mockResolvedValue({ customFields: [] }),
+    saveSettings: vi.fn().mockResolvedValue(undefined),
   };
 
   beforeEach(async () => {

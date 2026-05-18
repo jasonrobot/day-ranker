@@ -1,6 +1,6 @@
 import { computed, inject } from '@angular/core';
 import { signalStore, withMethods, withState, patchState, withComputed } from '@ngrx/signals';
-import { DayState, YearState } from '../models/app.model';
+import { AppSettings, DayState, FieldDefinition, YearState } from '../models/app.model';
 import { StorageService } from '../services/storage.service';
 
 function getDaysInMonth(year: number, monthIndex: number): number {
@@ -12,7 +12,7 @@ function defaultYearState(year: number): YearState {
     months: Array.from({ length: 12 }, (_, monthIdx) => ({
       days: Array.from(
         { length: getDaysInMonth(year, monthIdx) },
-        () => ({ score: null, comment: '' })
+        () => ({ score: null, comment: '', customFields: {} })
       ),
     })),
   };
@@ -21,6 +21,7 @@ function defaultYearState(year: number): YearState {
 interface StoreState {
   years: Record<number, YearState>;
   currentYear: number;
+  customFields: FieldDefinition[];
 }
 
 function defaultState(): StoreState {
@@ -28,6 +29,7 @@ function defaultState(): StoreState {
   return {
     years: { [year]: defaultYearState(year) },
     currentYear: year,
+    customFields: [],
   };
 }
 
@@ -50,6 +52,11 @@ export const CalendarStore = signalStore(
   }),
   withMethods(store => {
     const storageService = inject(StorageService);
+
+    storageService.loadSettings().then((settings: AppSettings) => {
+      patchState(store, { customFields: settings.customFields });
+    });
+
     return {
       updateDay(monthIdx: number, dayIdx: number, update: Partial<DayState>) {
         const year = store.currentYear();
@@ -86,6 +93,23 @@ export const CalendarStore = signalStore(
       },
       reset() {
         patchState(store, defaultState());
+      },
+      addField(def: FieldDefinition): string | null {
+        const exists = store.customFields().some(f => f.label === def.label);
+        if (exists) {
+          return `A field named "${def.label}" already exists.`;
+        }
+        const updated = [...store.customFields(), def];
+        patchState(store, { customFields: updated });
+        storageService.saveSettings({ customFields: updated });
+        return null;
+      },
+      updateField(label: string, update: Partial<Omit<FieldDefinition, 'label' | 'type'>>) {
+        const updated = store.customFields().map(f =>
+          f.label === label ? { ...f, ...update } : f
+        );
+        patchState(store, { customFields: updated });
+        storageService.saveSettings({ customFields: updated });
       },
     };
   })
