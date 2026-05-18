@@ -57,7 +57,26 @@ describe('DayEditor', () => {
     const updateSpy = vi.spyOn(component.calendarStore, 'updateDay');
     component.form.setValue({ score: 2, comment: 'nice' });
     component.save();
-    expect(updateSpy).toHaveBeenCalledWith(0, 0, { score: 2, comment: 'nice' });
+    expect(updateSpy).toHaveBeenCalledWith(0, 0, { score: 2, comment: 'nice', customFields: {} });
+  });
+
+  it('save() preserves hidden custom field values from dayState', () => {
+    component.calendarStore.updateDay(0, 0, {
+      score: 1,
+      comment: '',
+      customFields: { Energy: 8, Notes: 'hello' },
+    });
+    component.calendarStore.addField({ type: 'number', label: 'Energy', hidden: true, order: 0, range: [0, 10] });
+    component.calendarStore.addField({ type: 'text', label: 'Notes', hidden: false, order: 1 });
+    fixture.detectChanges();
+
+    const updateSpy = vi.spyOn(component.calendarStore, 'updateDay');
+    component.form.setValue({ score: 2, comment: 'updated' });
+    component.save();
+
+    const [, , update] = updateSpy.mock.calls[0];
+    expect(update.customFields!['Energy']).toBe(8);
+    expect(update.customFields!['Notes']).toBe('hello');
   });
 
   it('save() emits saved', () => {

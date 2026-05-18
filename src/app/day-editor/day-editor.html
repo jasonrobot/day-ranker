@@ -9,5 +9,33 @@
       Comment:
       <textarea class="comment-input" formControlName="comment" #commentInput></textarea>
     </label>
+    @for (field of visibleFields(); track field.label) {
+      <label>
+        {{ field.label }}:
+        @if (isTextField(field)) {
+          <input
+            type="text"
+            [value]="customFieldValues()[field.label] ?? ''"
+            (input)="onCustomFieldChange(field.label, $event)"
+          />
+        }
+        @if (isBooleanField(field)) {
+          <input
+            type="checkbox"
+            [checked]="customFieldValues()[field.label]"
+            (change)="onCustomFieldChange(field.label, $event)"
+          />
+        }
+        @if (isNumberField(field)) {
+          <input
+            type="number"
+            [value]="customFieldValues()[field.label] ?? field.range[0]"
+            [min]="field.range[0]"
+            [max]="field.range[1]"
+            (input)="onCustomFieldChange(field.label, $event)"
+          />
+        }
+      </label>
+    }
   </form>
 </div>
