@@ -55,6 +55,8 @@ export const CalendarStore = signalStore(
 
     storageService.loadSettings().then((settings: AppSettings) => {
       patchState(store, { customFields: settings.customFields });
+    }).catch(e => {
+      console.error('Failed to load settings', e);
     });
 
     return {
