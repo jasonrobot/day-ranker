@@ -1,0 +1,71 @@
+dialog {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 0;
+  min-width: 500px;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.settings-body {
+  padding: 16px;
+}
+
+.fields-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  input[type="number"] {
+    width: 60px;
+  }
+}
+
+.no-fields {
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.add-field-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.add-error {
+  color: red;
+  margin: 0;
+}
