@@ -52,6 +52,16 @@ describe('SettingsDialog', () => {
     expect(errorEl).toBeTruthy();
   });
 
+  it('shows an error when submitting with an empty label', () => {
+    component.newLabel = '';
+    component.submitAddField();
+    fixture.detectChanges();
+
+    expect(component.addError()).toBe('Label is required.');
+    const errorEl = fixture.nativeElement.querySelector('.add-error');
+    expect(errorEl).toBeTruthy();
+  });
+
   it('clears the error and resets the form on successful add', () => {
     store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
     component.newLabel = 'Notes';

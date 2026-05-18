@@ -10,7 +10,7 @@ import { FieldDefinition, FieldType, isNumberField } from '../models/app.model';
   styleUrl: './settings-dialog.scss',
 })
 export class SettingsDialog {
-  readonly calendarStore = inject(CalendarStore);
+  private readonly calendarStore = inject(CalendarStore);
   private readonly dialogRef = viewChild<ElementRef<HTMLDialogElement>>('dialog');
 
   readonly sortedFields = computed(() =>
@@ -36,6 +36,10 @@ export class SettingsDialog {
   }
 
   submitAddField(): void {
+    if (!this.newLabel.trim()) {
+      this.addError.set('Label is required.');
+      return;
+    }
     const def = this.buildFieldDef();
     const error = this.calendarStore.addField(def);
     if (error) {
