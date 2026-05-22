@@ -28,7 +28,7 @@ export class DayPopup {
   canGoPrev = computed(() => !(this.monthIndex() === 0 && this.dayIndex() === 0));
 
   canGoNext = computed(() => {
-    const daysInMonth = this.store.months()[this.monthIndex()].days.length;
+    const daysInMonth = this.store.months()[this.monthIndex()]?.days.length ?? 0;
     return !(this.monthIndex() === 11 && this.dayIndex() === daysInMonth - 1);
   });
 
@@ -62,7 +62,7 @@ export class DayPopup {
     if (!this.canGoPrev()) return;
     if (this.dayIndex() === 0) {
       const newMonth = this.monthIndex() - 1;
-      const daysInPrevMonth = this.store.months()[newMonth].days.length;
+      const daysInPrevMonth = this.store.months()[newMonth]?.days.length ?? 0;
       this.monthIndex.set(newMonth);
       this.dayIndex.set(daysInPrevMonth - 1);
     } else {
@@ -72,7 +72,7 @@ export class DayPopup {
 
   next(): void {
     if (!this.canGoNext()) return;
-    const daysInMonth = this.store.months()[this.monthIndex()].days.length;
+    const daysInMonth = this.store.months()[this.monthIndex()]?.days.length ?? 0;
     if (this.dayIndex() === daysInMonth - 1) {
       this.monthIndex.set(this.monthIndex() + 1);
       this.dayIndex.set(0);

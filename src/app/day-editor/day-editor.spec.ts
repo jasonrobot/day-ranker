@@ -74,7 +74,7 @@ describe('DayEditor', () => {
     component.form.setValue({ score: 2, comment: 'updated' });
     component.save();
 
-    const [, , update] = updateSpy.mock.calls[0];
+    const [, , update] = updateSpy.mock.calls[0]!;
     expect(update.customFields!['Energy']).toBe(8);
     expect(update.customFields!['Notes']).toBe('hello');
   });

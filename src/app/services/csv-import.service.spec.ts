@@ -15,17 +15,17 @@ describe('CsvImportService', () => {
 
     expect(result).not.toBeNull();
     expect(result!.year).toBe(2025);
-    expect(result!.state.months[0].days[14].score).toBe(3);
-    expect(result!.state.months[0].days[14].comment).toBe('Great day');
-    expect(result!.state.months[5].days[19].score).toBe(-2);
-    expect(result!.state.months[5].days[19].comment).toBe('bad day');
+    expect(result!.state.months[0]!.days[14]!.score).toBe(3);
+    expect(result!.state.months[0]!.days[14]!.comment).toBe('Great day');
+    expect(result!.state.months[5]!.days[19]!.score).toBe(-2);
+    expect(result!.state.months[5]!.days[19]!.comment).toBe('bad day');
   });
 
   it('preserves commas inside comments', () => {
     const csv = '2025-03-10,1,good, not great, but okay';
     const result = service.parse(csv);
 
-    expect(result!.state.months[2].days[9].comment).toBe('good, not great, but okay');
+    expect(result!.state.months[2]!.days[9]!.comment).toBe('good, not great, but okay');
   });
 
   it('excludes rows whose year does not match the detected year', () => {
@@ -33,10 +33,10 @@ describe('CsvImportService', () => {
     const result = service.parse(csv);
 
     expect(result!.year).toBe(2025);
-    expect(result!.state.months[0].days[0].score).toBe(1);
-    expect(result!.state.months[1].days[0].score).toBe(3);
+    expect(result!.state.months[0]!.days[0]!.score).toBe(1);
+    expect(result!.state.months[1]!.days[0]!.score).toBe(3);
     // 2024 row not loaded — June 15 should be default null
-    expect(result!.state.months[5].days[14].score).toBeNull();
+    expect(result!.state.months[5]!.days[14]!.score).toBeNull();
   });
 
   it('skips rows with an invalid date format without throwing', () => {
@@ -44,15 +44,15 @@ describe('CsvImportService', () => {
     const result = service.parse(csv);
 
     expect(result).not.toBeNull();
-    expect(result!.state.months[0].days[0].score).toBe(2);
+    expect(result!.state.months[0]!.days[0]!.score).toBe(2);
   });
 
   it('skips rows with a non-numeric score without throwing', () => {
     const csv = '2025-04-05,bad,comment\n2025-04-06,1,valid';
     const result = service.parse(csv);
 
-    expect(result!.state.months[3].days[4].score).toBeNull();
-    expect(result!.state.months[3].days[5].score).toBe(1);
+    expect(result!.state.months[3]!.days[4]!.score).toBeNull();
+    expect(result!.state.months[3]!.days[5]!.score).toBe(1);
   });
 
   it('skips blank lines without throwing', () => {
@@ -60,7 +60,7 @@ describe('CsvImportService', () => {
     const result = service.parse(csv);
 
     expect(result).not.toBeNull();
-    expect(result!.state.months[0].days[0].score).toBe(1);
+    expect(result!.state.months[0]!.days[0]!.score).toBe(1);
   });
 
   it('returns null for empty input', () => {
@@ -75,30 +75,30 @@ describe('CsvImportService', () => {
     const csv = '2024-02-29,2,leap day';
     const result = service.parse(csv);
 
-    expect(result!.state.months[1].days[28].score).toBe(2);
-    expect(result!.state.months[1].days[28].comment).toBe('leap day');
+    expect(result!.state.months[1]!.days[28]!.score).toBe(2);
+    expect(result!.state.months[1]!.days[28]!.comment).toBe('leap day');
   });
 
   it('initializes unset days to score null and empty comment', () => {
     const csv = '2025-07-04,1,holiday';
     const result = service.parse(csv);
 
-    expect(result!.state.months[0].days[0].score).toBeNull();
-    expect(result!.state.months[0].days[0].comment).toBe('');
+    expect(result!.state.months[0]!.days[0]!.score).toBeNull();
+    expect(result!.state.months[0]!.days[0]!.comment).toBe('');
   });
 
   it('strips surrounding double-quotes from comment', () => {
     const csv = '2025-05-10,2,"Great day"';
     const result = service.parse(csv);
 
-    expect(result!.state.months[4].days[9].comment).toBe('Great day');
+    expect(result!.state.months[4]!.days[9]!.comment).toBe('Great day');
   });
 
   it('strips surrounding quotes from a comment that contains commas', () => {
     const csv = '2025-04-18,2,"Tidied up the room, went to the sounders game, had a nice day overall"';
     const result = service.parse(csv);
 
-    expect(result!.state.months[3].days[17].comment).toBe(
+    expect(result!.state.months[3]!.days[17]!.comment).toBe(
       'Tidied up the room, went to the sounders game, had a nice day overall'
     );
   });

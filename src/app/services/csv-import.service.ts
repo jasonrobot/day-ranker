@@ -25,9 +25,14 @@ export class CsvImportService {
       const dateMatch = datePart.match(/^(\d{4})-(\d{2})-(\d{2})$/);
       if (!dateMatch) continue;
 
-      const year = parseInt(dateMatch[1], 10);
-      const month = parseInt(dateMatch[2], 10);
-      const day = parseInt(dateMatch[3], 10);
+      const yearStr = dateMatch[1];
+      const monthStr = dateMatch[2];
+      const dayStr = dateMatch[3];
+      if (!yearStr || !monthStr || !dayStr) continue;
+
+      const year = parseInt(yearStr, 10);
+      const month = parseInt(monthStr, 10);
+      const day = parseInt(dayStr, 10);
 
       if (detectedYear === null) {
         detectedYear = year;
@@ -42,10 +47,13 @@ export class CsvImportService {
       const monthIdx = month - 1;
       const dayIdx = day - 1;
 
+      if (!state) continue;
       if (monthIdx < 0 || monthIdx > 11) continue;
-      if (dayIdx < 0 || dayIdx >= state!.months[monthIdx].days.length) continue;
+      const monthState = state.months[monthIdx];
+      if (!monthState) continue;
+      if (dayIdx < 0 || dayIdx >= monthState.days.length) continue;
 
-      state!.months[monthIdx].days[dayIdx] = { score: score as Score, comment };
+      monthState.days[dayIdx] = { score: score as Score, comment };
     }
 
     if (detectedYear === null || state === null) return null;

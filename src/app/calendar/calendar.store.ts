@@ -42,8 +42,8 @@ export const CalendarStore = signalStore(
       months,
       monthStats: computed(() =>
         months().map(month => {
-          const scoredDays = month.days.filter(day => day.score !== null);
-          const total = scoredDays.reduce((sum, day) => sum + day.score!, 0);
+          const scoredDays = month.days.filter((day): day is DayState & { score: NonNullable<DayState['score']> } => day.score !== null);
+          const total = scoredDays.reduce((sum, day) => sum + day.score, 0);
           const average = scoredDays.length > 0 ? total / scoredDays.length : 0;
           return { total, average };
         })
@@ -76,7 +76,7 @@ export const CalendarStore = signalStore(
         storageService.saveYear(year, yearState);
       },
       getDay(monthIdx: number, dayIdx: number) {
-        return computed(() => store.months()[monthIdx].days[dayIdx]);
+        return computed(() => store.months()[monthIdx]?.days[dayIdx] ?? { score: null, comment: '' });
       },
       async setYear(year: number): Promise<void> {
         patchState(store, {

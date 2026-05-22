@@ -39,7 +39,7 @@ export class DayEditor {
   readonly isNumberField = isNumberField;
 
   readonly dayState = computed(() =>
-    this.calendarStore.months()[this.monthIndex()].days[this.dayIndex()]
+    this.calendarStore.months()[this.monthIndex()]?.days[this.dayIndex()] ?? { score: null, comment: '' }
   );
   readonly scoreClass = computed(() => getScoreClass(this.dayState().score));
 

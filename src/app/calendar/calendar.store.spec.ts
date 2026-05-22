@@ -40,8 +40,8 @@ describe('CalendarStore', () => {
 
       store.hydrate(CURRENT_YEAR, state);
 
-      expect(store.months()[0].days[0].score).toBe(2);
-      expect(store.months()[0].days[0].comment).toBe('loaded');
+      expect(store.months()[0]!.days[0]!.score).toBe(2);
+      expect(store.months()[0]!.days[0]!.comment).toBe('loaded');
     });
   });
 
@@ -50,8 +50,8 @@ describe('CalendarStore', () => {
       store.updateDay(0, 0, { score: 3, comment: 'test' });
       store.reset();
 
-      expect(store.months()[0].days[0].score).toBeNull();
-      expect(store.months()[0].days[0].comment).toBe('');
+      expect(store.months()[0]!.days[0]!.score).toBeNull();
+      expect(store.months()[0]!.days[0]!.comment).toBe('');
     });
 
     it('restores the correct number of days per month', () => {
@@ -68,14 +68,14 @@ describe('CalendarStore', () => {
       store.updateDay(0, 0, { score: 2 });
 
       expect(mockStorageService.saveYear).toHaveBeenCalledOnce();
-      const [year] = mockStorageService.saveYear.mock.calls[0];
+      const [year] = mockStorageService.saveYear.mock.calls[0]!;
       expect(year).toBe(CURRENT_YEAR);
     });
 
     it('calls storageService.saveYear with the updated state', () => {
       store.updateDay(1, 2, { score: -1, comment: 'bad day' });
 
-      const [year, state] = mockStorageService.saveYear.mock.calls[0];
+      const [year, state] = mockStorageService.saveYear.mock.calls[0]!;
       expect(year).toBe(CURRENT_YEAR);
       expect(state.months[1].days[2].score).toBe(-1);
       expect(state.months[1].days[2].comment).toBe('bad day');
@@ -87,7 +87,7 @@ describe('CalendarStore', () => {
       const result = store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
       expect(result).toBeNull();
       expect(store.customFields().length).toBe(1);
-      expect(store.customFields()[0].label).toBe('Notes');
+      expect(store.customFields()[0]!.label).toBe('Notes');
     });
 
     it('returns an error string when a duplicate label is added', () => {
@@ -107,13 +107,13 @@ describe('CalendarStore', () => {
     it('updates the hidden property of a field', () => {
       store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
       store.updateField('Notes', { hidden: true });
-      expect(store.customFields()[0].hidden).toBe(true);
+      expect(store.customFields()[0]!.hidden).toBe(true);
     });
 
     it('updates the order property of a field', () => {
       store.addField({ type: 'text', label: 'Notes', hidden: false, order: 0 });
       store.updateField('Notes', { order: 5 });
-      expect(store.customFields()[0].order).toBe(5);
+      expect(store.customFields()[0]!.order).toBe(5);
     });
 
     it('calls saveSettings after updating a field', () => {

@@ -29,7 +29,7 @@ export class Month {
 
   calendarStore = inject(CalendarStore);
 
-  monthStats = computed(() => this.calendarStore.monthStats()[this.monthIndex()]);
+  monthStats = computed(() => this.calendarStore.monthStats()[this.monthIndex()] ?? { total: 0, average: 0 });
 
   daysInMonth = computed(() => {
     const month = this.monthIndex();

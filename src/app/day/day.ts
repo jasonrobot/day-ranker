@@ -31,7 +31,7 @@ export class Day {
   calendarStore = inject(CalendarStore);
 
   monthSignal = computed(() => this.calendarStore.months()[this.monthIndex()]);
-  dayState = computed(() => this.monthSignal().days[this.dayIndex()]);
+  dayState = computed(() => this.monthSignal()?.days[this.dayIndex()] ?? { score: null, comment: '' });
 
   scoreClass = computed(() => scoreClass(this.dayState().score));
 
