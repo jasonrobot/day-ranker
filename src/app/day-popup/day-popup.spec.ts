@@ -181,6 +181,8 @@ describe('DayPopup', () => {
 
   it('hides nav buttons when isDirty is true', async () => {
     component.open(0, 0);
+    fixture.detectChanges();
+    await fixture.whenStable();
     component.onDirtyChange(true);
     fixture.detectChanges();
     await fixture.whenStable();

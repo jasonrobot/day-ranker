@@ -36,6 +36,12 @@ dialog {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 3fr repeat(3, 1fr);
+
+  thead, tbody, tr {
+    display: contents;
+  }
 
   th, td {
     padding: 8px;
@@ -54,15 +60,9 @@ dialog {
 }
 
 .add-field-form {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
   gap: 8px;
-
-  label {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
 }
 
 .add-error {

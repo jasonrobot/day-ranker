@@ -46,33 +46,25 @@
 
     <h3>Add Field</h3>
     <div class="add-field-form">
-      <label>
-        Label:
-        <input type="text" [(ngModel)]="newLabel" />
-      </label>
-      <label>
-        Type:
-        <select [(ngModel)]="newType">
+        <label for="label">Label:</label>
+        <input type="text" [(ngModel)]="newLabel" name="label" />
+
+        <label for="type">Type:</label>
+        <select name="type" [(ngModel)]="newType">
           <option value="text">text</option>
           <option value="boolean">boolean</option>
           <option value="number">number</option>
         </select>
-      </label>
-      @if (newType === 'number') {
-        <label>
-          Range min:
-          <input type="number" [(ngModel)]="newRangeMin" />
-        </label>
-        <label>
-          Range max:
-          <input type="number" [(ngModel)]="newRangeMax" />
-        </label>
-      }
-      <label>
-        Order:
-        <input type="number" [(ngModel)]="newOrder" />
-      </label>
-      <button (click)="submitAddField()">Add Field</button>
+        @if (newType === 'number') {
+        <label for="rangeMin">Range min:</label>
+        <input type="number" name="rangeMin" [(ngModel)]="newRangeMin" />
+        <label for="rangeMax">Range max:</label>
+        <input type="number" name="rangeMax" [(ngModel)]="newRangeMax" />
+        }
+        <label for="order">Order:</label>
+        <input type="number" name="order" [(ngModel)]="newOrder" />
+
+        <button (click)="submitAddField()">Add Field</button>
       @if (addError()) {
         <p class="add-error">{{ addError() }}</p>
       }
